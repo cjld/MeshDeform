@@ -21,6 +21,7 @@ public:
 	int featureSize;
 	int vertexSize;
 	int edgeSize;
+	int xSize;
 
 	DeformSF(DMEngine &eng, std::vector<DTriMesh*> ms);
 
@@ -29,12 +30,11 @@ public:
 	// iterator therhold
 	double iterEps;
 
-
+	// default value from the paper
 	void setTerm(
 	        double stretchTerm = 100,
 	        double bendTerm = 1,
 	        double volumeTerm = 1000);
-
 
 	// given const point, solve mesh
 	void solve(FeatureVector fv, DTriMesh &mesh);
@@ -42,7 +42,10 @@ public:
 	// given feature vector weights, solve mesh
     void solve(std::vector<double> weight, DTriMesh &mesh);
 
+	// have not been squared
 	Eigen::VectorXd getFeature(DTriMesh &mesh);
+	Eigen::VectorXd getWeight(DTriMesh &mesh);
+	DMSpMatrix getJacob(DTriMesh &mesh);
 };
 
 #endif // DEFORMSF_H
