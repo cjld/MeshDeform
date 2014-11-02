@@ -145,7 +145,7 @@ DMSpMatrix DeformSF::getJacob(DTriMesh &mesh) {
 	DTriMesh::EdgeIter it = mesh.edges_begin();
 	while (it != mesh.edges_end()) {
 		EdgeInfo info = getEdgeInfo(mesh, mesh.halfedge_handle(*it, 0));
-
+		data.push_back( make_pair( make_pair() ));
 		it++, i+=2;
 	}
 
