@@ -6,6 +6,8 @@
 #include <iostream>
 #include <tuple>
 
+#include "deformsf.h"
+
 #include "ARAPDeform.h"
 #include "FVAnalysis.h"
 #include <OpenMesh/Core/IO/MeshIO.hh>
@@ -165,9 +167,10 @@ void FuckFaceMesh() {
 }
 
 int main() {
-    CallMain();
+	DeformSF::main();
+    //CallMain();
     //testFVA();
-    return 0;
+    //return 0;
     DMEngine eng;
     DTriMesh mesh1, mesh2, mesh3;
     cout << "load mesh" << endl;

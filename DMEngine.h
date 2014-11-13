@@ -87,6 +87,8 @@ public:
     void Update() {p = eng->GetVariable(name);}
 };
 
+typedef std::vector< std::pair< std::pair<int, int>, double> > DMSpMatrixData;
+
 class DMSpMatrix {
 
 public:
@@ -95,18 +97,32 @@ public:
     std::string name;
     int n,m,l;
 
-    DMSpMatrix(DMEngine& eng, std::string name, int n, int m, std::vector< std::pair< std::pair<int,int>, double> > data, bool NeedSort = false) {
+	static void maintain(DMSpMatrixData &data) {
+		std::sort(data.begin(), data.end(),
+			[](const std::pair< std::pair<int, int>, double>& a, const std::pair< std::pair<int, int>, double>& b) -> bool {
+			return
+				a.first.second < b.first.second ||
+				a.first.second == b.first.second && a.first.first < b.first.first;
+		});
+		int j = 0;
+		for (int i = 1; i < data.size(); i++)
+			if (data[i].first != data[j].first) {
+			j++;
+			if (i != j) data[j] = data[i];
+			}
+			else
+				data[j].second += data[i].second;
+		data.erase(data.begin() + j, data.end());
+	}
+
+    DMSpMatrix(DMEngine& eng, std::string name, int n, int m, DMSpMatrixData data, bool NeedSort = false) {
         this->n = n, this->m = m;
         this->eng = &eng;
         this->name = name;
         this->l = (int)data.size();
         p = mxCreateSparse(n,m,data.size(),mxREAL);
-        if (NeedSort) {
-            std::sort(data.begin(),data.end(),
-            [](const std::pair< std::pair<int,int>, double>& a, const std::pair< std::pair<int,int>, double>& b) -> bool {
-                return a.first.second < b.first.second;
-            });
-        }
+        if (NeedSort)
+			maintain(data);
         for (int i=0; i<(int)data.size(); i++) {
             mxGetIr(p)[i] = data[i].first.first;
             mxGetJc(p)[data[i].first.second+1] ++;

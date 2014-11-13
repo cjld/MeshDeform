@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.0)
+project(MeshDeform)
+aux_source_directory(. src_list)
+
+# matlab
+include_directories("E:/matlab/R2013a/extern/include")
+link_directories("E:/matlab/R2013a/extern/lib/win64/microsoft")
+set(mylibs ${mylibs} libmx libmex libmat libeng)
+
+# eigen
+include_directories("E:/MyLib/eigen/eigen-eigen-6b38706d90a9")
+
+# openmesh
+include_directories("E:/MyLib/OpenMesh/OpenMesh 3.1/include")
+link_directories("E:/MyLib/OpenMesh/OpenMesh 3.1/lib")
+set(mylibsr ${mylibsr} OpenMeshCore OpenMeshTools)
+set(mylibsd ${mylibsd} OpenMeshCored OpenMeshToolsd)
+
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-DDUSE_OPENMP")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "/openmp")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-D_USE_MATH_DEFINES")
+add_definitions(-D_USE_MATH_DEFINES)
+
+set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} "-DWRITE_ITER_MESH")
+
+set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-DDRELEASE")
+
+foreach(src ${mylibs})
+	message(${src})
+endforeach()
+
+add_executable(mytest ${src_list})
+target_link_libraries(mytest ${mylibs} optimized ${mylibsr} debug ${mylibsd})
+
+add_library(MeshDeform ${src_list})
+target_link_libraries(MeshDeform ${mylibs} optimized ${mylibsr} debug ${mylibsd})

@@ -3,21 +3,23 @@
 
 #include "ARAPDeform.h"
 
-/*
+/**
  * A Implementation of
  * Example-Driven Deformations Based on Discrete Shells
  * Volume xx (200y), Number z, pp. 1–11
  * Stefan Fröhlich, Mario Botsch
  * */
+
 class DeformSF
 {
+	typedef std::vector<double> Feature;
 public:
 	DMEngine *eng;
 	std::vector<DTriMesh*> meshs;
-	std::vector<Eigen::VectorXd> fvs;
+	std::vector<Feature> fvs;
 
 	// weight for feature
-	Eigen::VectorXd w;
+	Feature w;
 	int featureSize;
 	int vertexSize;
 	int edgeSize;
@@ -43,9 +45,10 @@ public:
     void solve(std::vector<double> weight, DTriMesh &mesh);
 
 	// have not been squared
-	Eigen::VectorXd getFeature(DTriMesh &mesh);
-	Eigen::VectorXd getWeight(DTriMesh &mesh);
-	DMSpMatrix getJacob(DTriMesh &mesh);
+	Feature getFeature(DTriMesh &mesh);
+	Feature getWeight(DTriMesh &mesh);
+	DMSpMatrixData getJacob(FeatureVector &fv, DTriMesh &mesh);
+	void static main();
 };
 
 #endif // DEFORMSF_H
